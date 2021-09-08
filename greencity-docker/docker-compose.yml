@@ -1,0 +1,36 @@
+version: '3.1'
+services:
+  core-service:
+    container_name: core-service
+    image: core-service
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    env_file: env_file
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres-server
+    networks:
+       - net-microservice
+       - net-db
+
+  postgres-server:
+    image: postgres
+    container_name: postgres-server
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    env_file: env_postgres
+    networks:
+      - net-db
+
+volumes:
+    postgres-data:
+    rabbitmq-data:
+networks:
+    net-microservice:
+        driver: bridge
+    net-db:
+        driver: bridge
